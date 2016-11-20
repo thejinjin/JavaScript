@@ -1,0 +1,43 @@
+@charset "UTF-8"
+
+body {
+    margin:10px;
+}
+
+code {
+    color:#44c;
+    padding:0 2px 0 2px;
+}
+
+var {
+    color:#2aa;
+    padding:0 2px 0 2px;
+    font-family: monospace;
+}
+
+.api-section {
+    border-bottom:1px dotted #aaa;
+    padding-left:40px;
+}
+
+h1 {
+    color:#933
+}
+
+.api-item-title {
+    color:#449;
+    font-family: monospace;
+}
+
+a[href] {
+    color:#a83;
+}
+a[href]:hover {
+    color:#a33;
+}
+
+.api-catalog {
+    width:700px;
+    border:1px solid #888;
+    background-color:#efe;
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>JWonder前端开发库接口文档</title>
+<link rel="stylesheet" type="text/css" media="screen" href="./readme.css" />
+</head>
+<body>
+<article>
+    <header>
+        <h1><a id="wstd-core-title">JWonder核心接口</a></h1>
+        <p>JWonder核心使用全局对象<code>_JWonder</code>进行访问，也可简化为<code>$</code>符，为了保持与Jquery的兼容，当Jquery被加载时，核心对象简化使用<code>_$</code></p>
+        <p>如果要让JWonder和JQuery混用，请让JWonder的加载时间晚于JQuery</p>
+    </header>
+    <hr />
+    <!-- Catalog -->
+    <div class="api-catalog">
+        <h2>目录</h2>
+        <ol>
+            <li>
+                <a href="#wstd-core-grp-method">导出方法</a>
+                <ol>
+                    <li><a href="#wstd-core-addLoad"><code>addLoad()</code>:页面初始化执行的Load</a></li>
+                    <li><a href="#wstd-core-each"><code>each()</code>:合并枚举多个对象和列表</a></li>
+                    <li><a href="#wstd-core-eachLis"><code>eachLis()</code>:枚举一个列表</a></li>
+                    <li><a href="#wstd-core-eachObj"><code>eachObj()</code>:枚举一个对象的属性</a></li>
+                    <li><a href="#wstd-core-eval"><code>eval()</code>:求解Javascript表达式字符串</a></li>
+                    <li><a href="#wstd-core-exception"><code>exception()</code>:触发一个自定义异常</a></li>
+                    <li><a href="#wstd-core-isDef"><code>isDef()</code>:判断变量是否定义</a></li>
+                    <li><a href="#wstd-core-isNull"><code>isNull()</code>:判断变量是否为空</a></li>
+                    <li><a href="#wstd-core-listarg"><code>listarg()</code>:整理合并多个对象和列表为一个列表</a></li>
+                    <li><a href="#wstd-core-loop"><code>loop()</code>:执行循环惰性求值</a></li>
+                    <li><a href="#wstd-core-range"><code>range()</code>:构造一个整数范围迭代器</a></li>
+                    <li><a href="#wstd-core-shallowCopy"><code>shallowCopy()</code>:对对象执行浅拷贝</a></li>
+                    <li><a href="#wstd-core-_addCommand_"><code>_addCommand_()</code>:（语法移植API）向命令函数列表内添加一个新的项目</a></li>
+                    <li><a href="#wstd-core-_filter_"><code>_filter_()</code>:（语法移植API）匹配传入命令对象，触发一个命令函数执行</a></li>
+                </ol>
+            </li>
+            <li>
+                <a href="#wstd-core-grp-properties">属性</a>
+                <ol>
+                    <li><a href="#wstd-core-Client"><code>Client</code>:浏览器信息</a></li>
+                    <li><a href="#wstd-core-wonderTag"><code>wonderTag</code>:wstd对象唯一类型标识</a></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+    <hr />
+    <h2><a id="wstd-core-grp-method">导出方法：</a></h2>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-addLoad">addLoad(func)</a></h3>
+        <p>添加一个页面初始化执行的Load函数，加入的函数将在页面body部分加载完成后自动被执行</p>
+        <h4>参数：</h4>
+        <ul>
+           <li><var>func</var>：函数对象的引用</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回当前添加函数的执行顺序号
+        <h4>备注：</h4>
+        <p>可以多次调用addLoad来添加多个自动执行的函数，先添加的函数先被调用，后添加的函数后被调用，函数返回值中的执行顺序号表明当前添加的函数将排在第几位执行</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-each">each(...,func)</a></h3>
+        <p>将多个列表和非列表参数合并为一个列表并逐一按顺序枚举</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>...</var>：函数至少提供n+1一个参数(n&gt;0)，前面n个参数可以是除了<code>undefined</code>的任何参数，详情见备注</li>
+            <li><var>func</var>：指定每个枚举到的列表项的回调（同<a href="#wstd-core-eachLis">eachLis</a>）</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回回调函数处理每个枚举项后返回的有效值列表（同<a href="#wstd-core-eachLis">eachLis</a>）
+        <h4>备注：</h4>
+        <p>
+        函数调用时可以包含n+1个参数，前面n个参数既可以是<a href="#wstd-discript-list">列表</a>类型，也可以是非列表类型，函数将先行调用<a href="#wstd-core-listarg">listarg</a>方法对参数表进行整理，列表类型的数据将被展开，与非列表类型数据合并，最终所有参数将会被整合到一个新的列表当中，并逐一按顺序枚举
+        </p>
+        <p>
+        最后一个参数则传递枚举项的回调处理函数
+        </p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-eachLis">eachLis(list,config,func)</a><br />eachLis(list,func)</h3>
+        <p>对一个列表对象进行顺序枚举</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>list</var>：需要枚举的列表对象</li>
+            <li><var>config</var>：（可选）枚举时的操作选项，详情见备注</li>
+            <li><var>func</var>：指定每个枚举到的列表项的回调</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回回调函数处理每个枚举项后返回的有效值列表，详情见备注
+        <h4>备注：</h4>
+        <a id="wstd-discript-list">本函数接受的列表对象，是指具有如下特征的任意对象：</a>
+        <ol>
+            <li>拥有符合列表特征的下标属性值，例如：<code>obj[0]</code>、<code>obj[1]</code>、<code>obj[2]</code>……</li>
+            <li>拥有用于表明列表长度的<code>length</code>属性</li>
+            <li>下标<code>0</code>和下标<code>length-1</code>都不能为<code>undefined</code></li>
+        </ol>
+        <p>
+            函数每枚举到列表中的一个项的时候就会调用func参数指定的回调函数，该函数定义的原型为：<br />
+            <code>function(item,index)</code><br />
+            其中<code>item</code>是枚举到的项，而<code>index</code>则是项在列表中的索引值。</p>
+            <p>如果回调函数返回一个非<code>undefined</code>类型数据，则这个数据将被自动保存起来，枚举结束后作为一个返回值列表被函数返回，如果<var>config</var>参数中指定了<var>result</var>对象（必须是一个<code>Array</code>类型），则返回值列表将会被迭代入<var>result</var>，并将result作为最终的返回值
+        </p>
+        <p>
+        如果回调函数返回的结果对象中包含名为<var>_term_</var>的属性，且其布尔环境为true，则枚举操作将到此强行终止，后续数据不再枚举
+        </p>
+        <var>config</var>参数中可以支持如下属性：
+        <ul>
+            <li><var>begin</var>：枚举列表下标的起始值（必须小于end），默认为0</li>
+            <li><var>end</var>：枚举列表下标的结束值（不包含end自身，必须大于begin），默认为列表长度</li>
+            <li><var>step</var>：下标步进数，设置大于1时枚举将会跳过步进无法整除的下标，小于1将造成死循环，默认为1</li>
+            <li><var>result</var>：迭代的回调函数结果集列表</li>
+        </ul>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-eachObj">eachObj(object,config,func)</a><br />eachObj(object,func)</h3>
+        <p>对任意object对象的所有属性进行枚举</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>object</var>：需要枚举的对象</li>
+            <li><var>config</var>：（可选）枚举时的操作选项</li>
+            <li><var>func</var>：指定每个枚举到的属性项的回调</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回回调函数处理每个枚举项后返回的有效值列表（同<a href="#wstd-core-eachLis">eachLis</a>）
+        <h4>备注：</h4>
+        <p>
+            的回调函数func定义的原型为：<br />
+            <code>function(item,name)</code><br />
+            其中<code>item</code>是枚举到的项，而<code>name</code>则是属性项的名称。对回调函数返回值的处理方式与<a href="#wstd-core-eachLis">eachLis</a>相同
+        </p>
+        <p>
+            <var>config</var>参数只支持<var>result</var>属性用于迭代的回调函数结果集列表
+        </p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-eval">eval(text)</a></h3>
+        <p>求解一个JSON或其他Javascript表达式，与Javascript自带的eval表现基本一致，可以兼容IE8以下的IE浏览器</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>text</var>：表达式字符串</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>返回表达式求解的结果</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-exception">exception(object)</a></h3>
+        <p>引发一个自定义异常（throw语句的函数式封装）</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>object</var>：可以作为异常抛出的任意对象</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>由于引发了异常因此返回值永远无法被接收,始终返回undefined</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-isDef">isDef(object)</a></h3>
+        <p>判断变量是否已经定义（判断是否为undefined）</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>object</var>：任意需要判定的变量</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>如果判定的变量已经定义返回true，否则返回false</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-isNull">isNull(object)</a></h3>
+        <p>判断变量是否为空（判断是否为null）</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>object</var>：任意需要判定的变量</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>如果判定的变量为空返回true，否则返回false</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-listarg">listarg(args,begin,count)</a></h3>
+        <p>执行列表整理，遍历<var>args</var>列表从<var>begin</var>下标开始的<var>count</var>个项目，如果元素为列表类型，则展开列表，与所有的非列表元素合并，最终形成一个新的列表，从而逐渐拆解一个深层嵌套的列表</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>args</var>：需要整理的源列表</li>
+            <li><var>begin</var>：（可选）整理的起始下标，默认为0</li>
+            <li><var>count</var>：（可选）整理的项目总数，默认为列表的总长度</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回整理后的新列表
+        <h4>备注：</h4>
+        <p>函数每次只对<var>args</var>进行一次浅表遍历，展开第一层次下的列表元素，如果需要拆解多级嵌套的列表，则必须反复多次调用本函数，逐层拆解</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-loop">loop(iter,result_iter,func)</a><br />loop(iter,func)</h3>
+        <p>循环惰性求值，通过枚举一个迭代器函数，渐进获得的所有取值</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>iter</var>：一个迭代器函数，详情见备注</li>
+            <li><var>result_iter</var>：（可选）一个可以迭代添加的结果集列表，必须为<code>Array</code>类型</li>
+            <li><var>func</var>：指定处理每个枚举到的项的回调函数</li>
+        </ul>
+        <h4>返回值：</h4>
+        返回回调函数处理每个项后返回的有效值列表（同<a href="#wstd-core-eachLis">eachLis</a>），如果指定了result_iter参数，那么返回的结果集将在result_iter对象上迭代添加
+        <h4>备注：</h4>
+        <var>iter</var>参数传递的迭代器函数应当具有如下特征：
+        <ol>
+            <li>函数调用时不传递任何参数</li>
+            <li>每次调用时返回一个值，内部逻辑迭代变化</li>
+            <li>迭代终止时返回<code>undefined</code>表示迭代结束</li>
+        </ol>
+        <code>loop</code>函数运行时，将反复调用<var>iter</var>，通过调用回调函数传回每次调用<var>iter</var>的返回值，直到<var>iter</var>返回<code>undefined</code>枚举结束
+        <p>
+            的回调函数func定义的原型为：<br />
+            <code>function(item)</code><br />
+            参数<code>item</code>是枚举到的项。对回调函数返回值的处理方式与<a href="#wstd-core-eachLis">eachLis</a>相同
+        </p>
+        <p>
+        通过与<a href="wstd-core-range">range</a>函数创建的迭代器配合，可以实现有限次循环逻辑
+        </p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-range">range(begin，end)</a></h3>
+        <p>创建一个新的指定范围的连续整数迭代生成器函数</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>begin</var>：整数范围起始值</li>
+            <li><var>end</var>：整数范围结束值</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>返回一个新的迭代生成器函数，这个函数第一次调用时返回<var>begin</var>的值，之后每一次调用的返回值都会向着<var>end</var>依次逼近1，达到<var>end</var>时返回<code>undefined</code>;通常和<a href="#wstd-core-loop">loop</a>函数配合使用</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-shallowCopy">shallowCopy(source，destination)</a></h3>
+        <p>对来源对象的所有属性和方法之行一次浅拷贝</p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>source</var>：拷贝源</li>
+            <li><var>destination</var>：（可选）执行浅拷贝的目标，可以是任意object对象也可以为空</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>返回拷贝后的目标对象，如果指定了destination，那么返回对象引用与destination的引用一致，否则默认将新建1个object类型对象</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-_addCommand_">_addCommand_(cmdtab,cmdobj,cmdtype)</a></h3>
+        <p>（wstd语法移植开发者API）在使用wstd命令函数语法的环境中，添加命令函数列表项目，详情参考<a href="#wstd-core-grp-develop">移植开发</a></p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>cmdtab</var>：命令函数列表的引用</li>
+            <li><var>cmdobj</var>：需要添加到命令函数列表中的项目</li>
+            <li><var>cmdtype</var>：（可选）项目的类型，默认为<code>parser</code></li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>返回添加新项目后的<var>cmdtab</var>对象引用</p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-_filter_">_filter_(cmdtab,owner,input,args)</a></h3>
+        <p>（wstd语法移植开发者API）从命令函数列表中匹配触发对象，并直接发起调用，详情参考<a href="#wstd-core-grp-develop">移植开发</a></p>
+        <h4>参数：</h4>
+        <ul>
+            <li><var>cmdtab</var>：命令函数列表的引用</li>
+            <li><var>owner</var>：命令函数所属对象本身的引用</li>
+            <li><var>input</var>：输入的命令函数触发对象</li>
+            <li><var>args</var>：命令函数的调用参数列表</li>
+        </ul>
+        <h4>返回值：</h4>
+        <p>返回命令函数调用后返回的结果</p>
+    </section>
+    <h2><a id="wstd-core-grp-properties">属性</a></h2>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-Client">Client</a></h3>
+        <p>类型：<code>object</code></p>
+        <p>获取当前浏览器的类型和版本信息<p>
+        <p>该属性为一个<code>object</code>对象，所包含的成员如下：<p>
+        <ul>
+            <li><var>browser</var>：浏览器名称</li>
+            <li><var>browser_ver</var>：浏览器版本号</li>
+            <li><var>engine</var>：浏览器排版引擎名称</li>
+            <li><var>engine_ver</var>：排版引擎版本号</li>
+        </ul>
+        <p>浏览器名称可能是如下取值：<p>
+        <ul>
+            <li><code>"chrome"</code>：Google Chrome（谷歌浏览器）</li>
+            <li><code>"firefox"</code>：Mozilla FireFox（火狐）</li>
+            <li><code>"ie"</code>：Microsoft Internet Explorer（IE）</li>
+            <li><code>"opera"</code>：Opera Software Opera</li>
+            <li><code>"safari"</code>：Apple Safari</li>
+            <li><code>"unknow"</code>：未知浏览器，该取值下<var>browser_ver</var>的值可能为<code>"none"</code></li>
+        </ul>
+        <p>浏览器排版引擎名称可能是如下取值：<p>
+        <ul>
+            <li><code>"gecko"</code>：Mozilla的排版引擎</li>
+            <li><code>"presto"</code>：Opera的排版引擎</li>
+            <li><code>"trident"</code>：Microsoft Windows系统内置的排版引擎，与为IE的核心</li>
+            <li><code>"webkit"</code>：Apple开发的排版引擎Chrome、Safari的核心，也是Android、iOS等移动系统的默认引擎</li>
+            <li><code>"unknow"</code>：未知引擎，该取值下<var>engine_ver</var>的值可能为<code>"none"</code></li>
+        </ul>
+        <p>IE浏览器目前的识别信息还存在变动可能，目前测试通过的最大支持版本为IE 11 Preview<p>
+    </section>
+    <!--  -->
+    <section class="api-section">
+        <h3 class="api-item-title"><a id="wstd-core-wonderTag">wonderTag</a></h3>
+        <p>类型：<code>string</code></p>
+        <p><var>wonderTag</var>是一个约定的属性，用于唯一标识种类型的对象，所有具有wstd语法的对象都应当拥有这个属性以便于区分彼此</p>
+        <p>作为核心对象，<var>wonderTag</var>的值始终为<code>#JWonder</code></p>
+    </section>
+</article>
+</body>
+</html>

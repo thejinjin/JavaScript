@@ -1,4 +1,4 @@
-#JWonder前端开发库
+#前端开发库（JWonder）
 
 <h2>简介</h2>
 JWonder核心使用全局对象<code>_JWonder</code>进行访问，也可简化为<code>$</code>符，为了保持与Jquery的兼容，当Jquery被加载时，核心对象简化使用<code> _$ </code>。<br>

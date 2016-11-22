@@ -1,10 +1,10 @@
-#### 介绍
-
+### 介绍
+---
 - JWonder核心使用全局对象JWonder进行访问，也可简化为$符，为了保持与Jquery的兼容，当Jquery被加载时，核心对象简化使用 $ 。
 - 如果要让JWonder和JQuery混用，请让JWonder的加载时间晚于JQuery加载。a
 
-#### 使用说明书（方法）
-
+### 使用说明书（方法）
+---
 1. addLoad()
 > 说明：页面初始化执行的Load
 2. each()
